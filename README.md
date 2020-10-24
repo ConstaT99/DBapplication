@@ -65,3 +65,24 @@ We will crawl wildfires’ data from different websites and store them in the No
 ### Some links
 Team page: https://wiki.illinois.edu/wiki/display/CS411AAFA20/Project+Null  
 Project Detail Link: https://wiki.illinois.edu/wiki/display/CS411AAFA20/Project+Track+1
+
+### Backend Tutorial
+
+Checkout backend.py(backend/backend.py) for more details.
+
+#### SQL
+
+After running any command, it will ask you for the password: *teamnull*
+
+Load github sql database into local database. 
+
+``` 
+mysql -u root -p db < db.sql
+```
+
+Store your local database into a sql file.
+
+``` 
+mysqldump -u root -p --databases db > db.sql
+```
+
