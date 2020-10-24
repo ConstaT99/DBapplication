@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
 from pymongo import MongoClient
-client = MongoClient("mongodb+srv://76rtao6:rtao676411@cluster0.8st24.gcp.mongodb.net/76rtao6?retryWrites=true&w=majority")
-db = client.test
+import numpy as np
+import dns
+import datetime
+
+client = MongoClient('localhost', 27017)
+db = client.test # create test collection
+people = db.people
+
+# create person document
+personDocument = {
+  "name": { "first": "Alan", "last": "Turing" },
+  "birth": datetime.datetime(1912, 6, 23),
+  "death": datetime.datetime(1954, 6, 7),
+  "contribs": [ "Turing machine", "Turing test", "Turingery" ],
+  "views": 1250000
+}
+
+# insert the document
+personID = people.insert_one(personDocument).inserted_id
+if (personID != None):
+  print("inserted sucess")
