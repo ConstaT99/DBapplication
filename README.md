@@ -74,15 +74,40 @@ Checkout backend.py(backend/backend.py) for more details.
 
 After running any command, it will ask you for the password: *teamnull*
 
-Load github sql database into local database. 
+Load github sql database into local database.
 
-``` 
+```
 mysql -u root -p db < db.sql
 ```
 
 Store your local database into a sql file.
 
-``` 
+```
 mysqldump -u root -p --databases db > db.sql
 ```
 
+#### Mongodb
+Mac user need to set up in .bash_profile
+```
+alias monogodstart="< path of mongodb >/bin/mongod --dbpath <path of database folder> --logpath <path of log file> --fork"
+```
+- `alias` is creating a command that will run the code at right hand side of Equals sign
+- `--fork` means running database at background process.
+- `--dbpath` define the path of database. `--logpath` define the path of log file.
+
+Then run `source ~/.bash_profile`(you might need to run this everytime you open you terminal)
+
+`monogodstart` is the command will connect to local database.
+
+If connect successfully you will see
+```
+about to fork child process, waiting until server is ready for connections.
+forked process: 12345 (this is id for backgroud process)
+child process started successfully, parent exiting
+```
+then  `mongo` will open shell for you to modify database.
+
+SHUT DOWN DATABASE
+```
+db.adminCommand({"shutdown":1})
+```
