@@ -26,7 +26,7 @@ Users’ data (personal info + fire pictures + alert preferences): inserted by o
 
 - Periodically sync with California wildfire data and Weather data by inserting new wildfire incidents
 
--Predict counties that are highly possible to have a wildfire in the near future and alert associated users.
+- Predict counties that are highly possible to have a wildfire in the near future and alert associated users.
 
 **Update:**
 
@@ -87,7 +87,7 @@ mysqldump -u root -p --databases db > db.sql
 ```
 
 #### Mongodb
-Mac user need to set up in .bash_profile
+Mac user need to setup alias in .bash_profile
 ```
 alias monogodstart="< path of mongodb >/bin/mongod --dbpath <path of database folder> --logpath <path of log file> --fork"
 ```
@@ -105,9 +105,11 @@ about to fork child process, waiting until server is ready for connections.
 forked process: 12345 (this is id for backgroud process)
 child process started successfully, parent exiting
 ```
-then  `mongo` will open shell for you to modify database.
-
-SHUT DOWN DATABASE
+then
+```
+mongo
+```
+Command to shut down database
 ```
 db.adminCommand({"shutdown":1})
 ```
