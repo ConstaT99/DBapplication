@@ -19,5 +19,7 @@ personDocument = {
 
 # insert the document
 personID = people.insert_one(personDocument).inserted_id
+
+people.find_one()
 if (personID != None):
   print("inserted sucess")
