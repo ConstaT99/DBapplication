@@ -1,5 +1,5 @@
 import flask
-from flask import request, jsonify, redirect
+from flask import request, jsonify, redirect, json
 from pymongo import MongoClient
 import numpy as np
 import datetime
@@ -37,18 +37,11 @@ books = [
 #   "email" : "411411@gmail.com"
 # }
 
-fireDocument = {
-  "userId": { "404DontTrustTears" },
-  "password": {"areukiddingme"},
-  "nickName": {"small4"},
-  "alertLocation": {"SF"},
-  "phoneNumber": {1234567},
-  "email" : {"411411@gmail.com"}
-}
 
 client = MongoClient('localhost', 27017)
 db = client.projectnull  # create test collection
 user = db.user
+messages = db.messages
 
 # connection = pymysql.connect(host='localhost',
 #                              user='root',
@@ -81,11 +74,9 @@ user = db.user
 #     cursor.execute(sql, request.args.get('name'))
 #     return jsonify(cursor.fetchall())
 
-print("wwwwwww")
 
 @app.route('/api/people/mongodb/create', methods=['GET'])
 def createUser():
-    print("aaa")
     userId = request.args.get('userId')
     password = request.args.get('password')
     nickName = request.args.get('nickName')
@@ -95,7 +86,6 @@ def createUser():
     exist_check = user.find({"userId":userId},{"_id":0}).count()
 
     if exist_check >=1:
-        print("ttttttttttttttt")
         return dumps(print("Account already exsits")),400
     else:
         userDocument = {
@@ -103,13 +93,41 @@ def createUser():
           "password":password,
           "nickName":nickName,
           "alertLocation": alertLocation,
-          "phoneNumber": alertLocation,
+          "phoneNumber": phoneNumber,
           "email" : email
         }
         user.insert_one(userDocument)
         print("Field value is not present")
         return dumps(user.find({"userId":userId},{"password":0}))
         # return redirect('http://localhost:3000')
+
+
+@app.route('/api/location/messages', methods=['GET'])
+def postComment():
+    # userId = request.args.get('userId')
+    # nickName = request.args.get('nickName')
+    # alertLocation = request.args.get('alertLocation')
+    location = request.args.get('location')
+    # phoneNumber = request.args.get('phoneNumber')
+    # email = request.args.get('email')
+    message = request.args.get('messages')
+
+    messagesDocument = {
+      # "userId":userId,
+      # "nickName":nickName,
+      # "alertLocation": alertLocation,
+      "location": location,
+      # "phoneNumber": alertLocation,
+      # "email" : email,
+      "messages" : message
+    }
+    messages.insert_one(messagesDocument)
+
+    print("Input comment")
+    return dumps(messages.find({"location":location}))
+    # return dumps(messages.find({"userId":userId}))
+        # return redirect('http://localhost:3000'
+
 
 
 
