@@ -20,15 +20,21 @@ userDocument = {
   "email" : {"411411@gmail.com"}
 }
 
-# @app.route('/api/people/mongodb', methods=['GET'])
-def deleteUser(userID: str, password: int):
+@app.route('/api/people/mongodb/', methods=['GET'])
+def deleteUser(userId: str, password: int):
     userId = request.args.get('userId')
     password = request.args.get('password')
-    pw = user.find({userID: "userID"},{password:1})
+    pw = user.find({"userId": userId},{"password" : 1,"_id":0 })[0]["password"]
     if pw != password:
         # raise error
          return '''<h1>An error achieve </h1><p>your password is not correct</p >'''
     else:
-        user.remove({userID: "userID"})
-
+        user.delete_one({"userId": userId})
     return 0
+
+
+
+if __name__ == "__main__":
+  userId = input("userId: ")
+  password = input("password: ")
+  deleteUser(userId, password)
