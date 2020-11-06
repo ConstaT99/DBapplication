@@ -74,6 +74,18 @@ messages = db.messages
 #     cursor.execute(sql, request.args.get('name'))
 #     return jsonify(cursor.fetchall())
 
+@app.route('/api/user/login', methods=['GET'])
+def login():
+    userId = request.args.get('userId')
+    password = request.args.get('password')
+    doc = user.find_one({"userId": userId})
+    if doc is None or doc["password"] != password:
+        # raise error
+        return '''Invalid request''', 400
+
+    response = flask.jsonify(user.find_one({"userId": userId}, {
+        "userId": 1, "nickName": 1, "alertLocation": 1, "phoneNumber": 1, "email": 1, "_id": 0}))
+    return response
 
 @app.route('/api/people/mongodb/create', methods=['GET'])
 def createUser():
