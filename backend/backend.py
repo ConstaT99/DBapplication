@@ -83,7 +83,7 @@ user = db.user
 
 print("wwwwwww")
 
-@app.route('/api/people/mongodb', methods=['GET'])
+@app.route('/api/people/mongodb/create', methods=['GET'])
 def createUser():
     print("aaa")
     userId = request.args.get('userId')
