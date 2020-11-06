@@ -31,7 +31,7 @@ def readUser(userId: str, password: int):
         return '''<h1>An error achieve </h1><p>your password is not correct</p >'''
     else:
         var = user.find_one({"userId": userId},{"userId":1, "nickName":1, "alertLocation":1, "phoneNumber":1, "email":1,"_id":0})
-    return dump(var)
+    return dumps(var)
 
 if __name__ == "__main__":
   userId = input("userId: ")
