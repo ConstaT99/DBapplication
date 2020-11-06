@@ -42,11 +42,11 @@ phoneNumber: int, email: str):
         return redirect('http://localhost:3000')
 
 #
-# userDocument = {
-#   "userId": { "%s" },
-#   "password": {"%s"},
-#   "nickName": {"%s"},
-#   "alertLocation": {"%s"},
-#   "phoneNumber": {%},
-#   "email" : {"%s"}
-# } % (userId,password,nickName,alertLocation,phoneNumber,email)
+userDocument = {
+  "userId": { "%s" },
+  "password": {"%s"},
+  "nickName": {"%s"},
+  "alertLocation": {"%s"},
+  "phoneNumber": {%},
+  "email" : {"%s"}
+} % (userId,password,nickName,alertLocation,phoneNumber,email)
