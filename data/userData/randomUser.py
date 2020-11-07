@@ -13,15 +13,16 @@ client = MongoClient('localhost', 27017)
 db = client.projectnull  # create test collection
 user = db.user
 
-countyName = ["Alameda County","Alpine County","Amador County","Butte County","Calaveras County",
-"Colusa County","Contra Costa County","Del Norte County","El Dorado County","Fresno County","Glenn County",
-"Humboldt County","Imperial County","Inyo County","Kern County","Kings County","Lake County","Lassen County",
-"Los Angeles County","Madera County","Marin County","Mariposa County","Mendocino County","Merced County","Modoc County",
-"Mono County","Monterey County","Napa County","Nevada County","Orange County","Placer County","Plumas County","Riverside County",
-"Sacramento County","San Benito County","San Bernardino County","San Diego County","San Francisco County","San Joaquin County,"
-"San Luis Obispo County","San Mateo County","Santa Barbara County","Santa Clara County","Santa Cruz County","Shasta County",
-"Sierra County","Siskiyou County","Solano County","Sonoma County","Stanislaus County,Sutter County","Tehama County","Trinity County",
-"Tulare County","Tuolumne County","Ventura County","Yolo County","Yuba County"]
+countyName = ["Alameda","Alpine","Amador","Butte","Calaveras",
+"Colusa","Contra_Costa","Del_Norte","El_Dorado ","Fresno","Glenn",
+"Humboldt","Imperial","Inyo","Kern","Kings","Lake","Lassen",
+"Los_Angeles ","Madera","Marin","Mariposa","Mendocino","Merced","Modoc",
+"Mono","Monterey","Napa","Nevada","Orange","Placer","Plumas","Riverside",
+"Sacramento","San_Benito","San_Bernardino","San_Diego","San_Francisco","San_Joaquin",
+"San_Luis_Obispo","San_Mateo","Santa_Barbara","Santa_Clara","Santa_Cruz","Shasta",
+"Sierra","Siskiyou","Solano","Sonoma","Stanislaus","Sutter","Tehama","Trinity",
+"Tulare","Tuolumne","Ventura","Yolo","Yuba"]
+
 
 def random_with_n_digits(n):
     range_start = 10**(n-1)
