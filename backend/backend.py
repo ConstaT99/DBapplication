@@ -65,14 +65,8 @@ messages = db.messages
 # def api_mongodb():
 #     return dumps(db.people.find_one())
 
+#
 
-# @app.route('/api/people/mysql', methods=['GET'])
-# def api_mysql():
-#     sql = "SELECT * FROM people WHERE name=%s"
-#     # use request.args.get to fetch get params
-#     # e.g. GET /api/people/mysql?name=root
-#     cursor.execute(sql, request.args.get('name'))
-#     return jsonify(cursor.fetchall())
 
 @app.route('/api/user/login', methods=['GET'])
 def login():
@@ -93,6 +87,7 @@ def createUser():
     password = request.args.get('password')
     nickName = request.args.get('nickName')
     alertLocation = request.args.get('alertLocation')
+    physicalLocation = request.args.get('physicalLocation')
     phoneNumber = request.args.get('phoneNumber')
     email = request.args.get('email')
     exist_check = user.find({"userId":userId},{"_id":0}).count()
@@ -113,10 +108,18 @@ def createUser():
         return dumps(user.find({"userId":userId},{"password":0}))
         # return redirect('http://localhost:3000')
 
+@app.route('/api/people/mysql', methods=['GET'])
+def api_mysql():
+    sql = "SELECT * FROM people WHERE name=%s"
+    # use request.args.get to fetch get params
+    # e.g. GET /api/people/mysql?name=root
+    cursor.execute(sql, request.args.get('name'))
+    return jsonify(cursor.fetchall())
 
 @app.route('/api/location/messages', methods=['GET'])
 def postComment():
-    # userId = request.args.get('userId')
+    #comment id +
+    userId = request.args.get('userId')
     # nickName = request.args.get('nickName')
     # alertLocation = request.args.get('alertLocation')
     location = request.args.get('location')
