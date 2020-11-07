@@ -6,6 +6,8 @@ import datetime
 from bson.json_util import dumps
 import pymongo
 from flask import request
+import uuid
+from random import randrange, random, randint
 
 client = MongoClient('localhost', 27017)
 db = client.projectnull  # create test collection
@@ -21,6 +23,11 @@ countyName = ["Alameda County","Alpine County","Amador County","Butte County","C
 "Sierra County","Siskiyou County","Solano County","Sonoma County","Stanislaus County,Sutter County","Tehama County","Trinity County",
 "Tulare County","Tuolumne County","Ventura County","Yolo County","Yuba County"]
 
+def random_with_n_digits(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
+
 # create user document
 for x in range(5):
     a = uuid.uuid4().hex[:8]
@@ -32,7 +39,7 @@ for x in range(5):
     random_index_2 = randrange(len(countyName))
     item_2 = countyName[random_index_2]
     e = item_2
-    f = random(10)
+    f = random_with_n_digits(10)
     g = uuid.uuid4().hex[:10]
 
     userDocument = {
