@@ -312,12 +312,17 @@ def likeImage():
 
 @app.route('/api/image/popular/<incidentId>', methods=['GET'])
 def popularImage(incidentId):
-    count = int(request.args.get('count'))
-    document = images.find({"incidentId": incidentId}, {"_id": 0}).sort(
-        "like", pymongo.DESCENDING).limit(count)
-    if document is None:
+    limit = int(request.args.get('limit'))
+    documents = images.find({"incidentId": incidentId}, {"_id": 0, "imageId": "$_id", "incidentId": 1, "userId": 1, "comments": 1, "like": 1}).sort(
+        "like", pymongo.DESCENDING).limit(limit)
+
+    if documents is None:
         return '''Invalid request''', 400
-    return dumps(document)
+    result = list(documents)
+    for document in result:
+        document["imageId"] = str(document["imageId"].binary.hex())
+    return flask.jsonify(result)
+
 
 
 # @app.route('/js/<path:path>')

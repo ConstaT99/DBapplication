@@ -26,8 +26,8 @@ connection = pymysql.connect(host='localhost',
                              cursorclass=pymysql.cursors.DictCursor)
 cursor = connection.cursor()
 
-@app.route('/training/face/upload', methods=['POST'])
-def face_upload():
+@app.route('/api/image', methods=['POST'])
+def createImage():
     target = os.path.join(APP_ROOT, 'face-images/')  #folder path
     if not os.path.isdir(target):
             os.mkdir(target)     # create folder if not exits
