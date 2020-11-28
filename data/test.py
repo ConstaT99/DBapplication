@@ -18,4 +18,4 @@ app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 # cursor.execute("CREATE DATABASE projectnull")
-cursor.execute("CREATE TABLE messages (messageId int NOT NULL AUTO_INCREMENT,userId VARCHAR(255), content VARCHAR(255), location VARCHAR(255), primary key(messageId))")
+cursor.execute("CREATE TABLE comments (commentId int NOT NULL AUTO_INCREMENT, createDate DATETIME DEFAULT NOW(), userId VARCHAR(255), content VARCHAR(255), imageId VARCHAR(255), primary key(commentId))")

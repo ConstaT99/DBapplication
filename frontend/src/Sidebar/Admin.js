@@ -14,7 +14,7 @@ class Admin extends Component {
 
     showUsersInFireByStatistics(e) {
         e.preventDefault();
-        fetch(`http://localhost:5000/api/userInFire`)
+        fetch(`http://localhost:5000/api/admin/userInFire`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -53,7 +53,7 @@ class Admin extends Component {
 
         return (
             <div className='sidebarItem'>
-                <Popup trigger={<img style={{ width: '8vw' }} src={admin} />} modal nested>
+                <Popup trigger={<img style={{ width: '8vw' }} alt="admin" src={admin} />} modal nested>
                     {
                         close => (
                             <div className="modal">
@@ -68,7 +68,7 @@ class Admin extends Component {
                                     </nav>
                                     <div className="userInputDiv">
                                         <button onClick={this.showUsersInFireByStatistics}>showUsersInFireByStatistics </button>
-                                        <button onClick={this.showUsersInFireByAlert}>showUsersInFireByAlert </button>
+                                        {/* <button onClick={this.showUsersInFireByAlert}>showUsersInFireByAlert </button> */}
                                     </div>
                                 </div>
                             </div>

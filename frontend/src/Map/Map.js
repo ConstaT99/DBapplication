@@ -1,52 +1,49 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { InfoWindow, Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import Comments from '../Comments.js'
 
 class GoogleMap extends Component {
     constructor(props) {
         super(props);
-        this.state = { showingInfoWindow: false, activeMarkers: null, selectedPlace: null, messages: [] };
+        this.state = { showingInfoWindow: false, activeMarkers: null, incidentId: null, selectedPlace: null };
         this.onMarkerClick = this.onMarkerClick.bind(this);
+        this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
+        this.onInfoWindowOpen = this.onInfoWindowOpen.bind(this);
     }
 
     componentDidMount() {
         this.props.updateMarkers();
     }
 
+    onInfoWindowClose(props, e) {
+        this.props.updateIncidentId(null);
+        this.props.updateAnimation(null);
+    }
+
+    onInfoWindowOpen(props, e) {
+        const newDiv = (<div><h1>{this.state.selectedPlace}</h1><Comments incidentId={this.state.incidentId} userId={this.props.userId} /></div>);
+        ReactDOM.render(React.Children.only(newDiv), document.getElementById("iwc"));
+    }
+
     onMarkerClick(props, marker, e) {
-        fetch(`http://localhost:5000/api/location/messages?location=${encodeURIComponent(props.name)}`, {
-            method: "GET"
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        selectedPlace: props.name, showingInfoWindow: true, activeMarker: marker, messages: result.map((document) => {
-                            return document.content;
-                        })
-                    });
-                },
-                (error) => {
-                    alert("failed");
-                });
+        this.props.updateIncidentId(props.incidentId);
+        this.props.updateAnimation(props.index);
+        this.setState({ selectedPlace: props.name, incidentId: props.incidentId, showingInfoWindow: true, activeMarker: marker });
     }
 
     render() {
         let markers = this.props.markers.map((document, idx) => {
             return (
                 <Marker
-                    name={document.incident_county}
-                    position={{ lat: document.incident_latitude, lng: document.incident_longitude }}
+                    name={document.incidentCounty}
+                    incidentId={document.incidentId}
+                    position={{ lat: document.incidentLatitude, lng: document.incidentLongitude }}
+                    index={idx}
                     key={idx}
                     onClick={this.onMarkerClick}
+                    animation={(this.props.animations[idx]) ? (this.props.google.maps.Animation.BOUNCE) : (null)}
                 />
-            );
-        });
-
-        let messages = this.state.messages.map((message) => {
-            return (
-                <h4>
-                    {message}
-                </h4>
             );
         });
 
@@ -60,11 +57,14 @@ class GoogleMap extends Component {
                     {markers}
                     <InfoWindow
                         marker={this.state.activeMarker}
-                        visible={this.state.showingInfoWindow}>
-                        <div>
-                            <h1>{this.state.selectedPlace}</h1>
-                            {messages}
-                        </div>
+                        visible={this.state.showingInfoWindow}
+                        onOpen={e => {
+                            this.onInfoWindowOpen(this.props, e);
+                        }}
+                        onClose={e => {
+                            this.onInfoWindowClose(this.props, e);
+                        }}>
+                        <div id="iwc" />
                     </InfoWindow>
                 </Map>
             </div >

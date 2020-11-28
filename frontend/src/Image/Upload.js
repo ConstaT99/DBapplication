@@ -5,25 +5,48 @@ import Popup from 'reactjs-popup';
 class Upload extends Component {
     constructor(props) {
         super(props);
-        this.state = { location: "", message: "" };
+        this.state = { file: null, content: "" };
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleOnUpload = this.handleOnUpload.bind(this);
     }
 
     handleOnChange(e) {
         e.preventDefault();
-        this.setState({ [e.target.name]: e.target.value });
+        if (e.target.name === 'file')
+            this.setState({ [e.target.name]: e.target.files[0] });
+        else
+            this.setState({ [e.target.name]: e.target.value });
     }
 
     handleOnUpload(e) {
         e.preventDefault();
-        fetch(`http://localhost:5000/api/location/messages?location=${encodeURIComponent(this.state.location)}&content=${encodeURIComponent(this.state.message)}&userId=${encodeURIComponent(this.props.userId)}`, {
-            method: "POST"
+        if (this.props.incidentId === null) {
+            alert("Please click on one marker to choose a certain incident!");
+            return;
+        }
+
+        const data = new FormData();
+        data.append('fireImage', this.state.file);
+        data.append('userId', this.props.userId);
+        data.append('incidentId', this.props.incidentId);
+
+        fetch(`http://localhost:5000/api/image`, {
+            method: "POST",
+            body: data
         })
             .then(res => res.json())
-            .then(
-                (result) => {
-                },
+            .then(result => {
+                const data = new FormData();
+                data.append('userId', this.props.userId);
+                data.append('imageId', result);
+                data.append('content', this.state.content);
+                return fetch(`http://localhost:5000/api/comment`, {
+                    method: "POST",
+                    body: data
+                });
+            })
+            .then(res => res.json())
+            .catch(
                 (error) => {
                     alert("failed");
                 });
@@ -41,12 +64,11 @@ class Upload extends Component {
                                 </button>
                                 <div>
                                     <div className="userInputDiv">
-                                        <label htmlFor="location">Location:</label>
-                                        <input type="text" id="location" name="location" onChange={this.handleOnChange} />
+                                        <input type="file" id="file" name="file" onChange={this.handleOnChange} />
                                     </div>
                                     <div className="userInputDiv">
-                                        <label htmlFor="message">Message:</label>
-                                        <input type="text" id="message" name="message" onChange={this.handleOnChange} />
+                                        <label htmlFor="content">Content:</label>
+                                        <input type="text" id="content" name="content" onChange={this.handleOnChange} />
                                     </div>
                                     <div className="userInputDiv">
                                         <button onClick={this.handleOnUpload}>Upload </button>

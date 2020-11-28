@@ -23,8 +23,14 @@ class UserForm extends Component {
 
     handleOnSubmit(e) {
         e.preventDefault();
+        const data = new FormData();
         if (this.props.option === signInOption) {
-            fetch(`http://localhost:5000/api/user/login?userId=${encodeURIComponent(this.state.userId)}&password=${encodeURIComponent(this.state.password)}`)
+            data.append('userId', this.state.userId);
+            data.append('password', this.state.password);
+            fetch(`http://localhost:5000/api/user/login`, {
+                method: "POST",
+                body: data
+            })
                 .then(res => res.json())
                 .then(
                     (result) => {
@@ -36,8 +42,16 @@ class UserForm extends Component {
                     });
         }
         else {
-            fetch(`http://localhost:5000/api/user?userId=${encodeURIComponent(this.state.userId)}&password=${encodeURIComponent(this.state.password)}&email=${encodeURIComponent(this.state.email)}&phoneNumber=${encodeURIComponent(this.state.phoneNumber)}&nickName=${encodeURIComponent(this.state.nickName)}&physicalLocation=${encodeURIComponent(this.state.physicalLocation)}`, {
-                method: "POST"
+            data.append('userId', this.state.userId);
+            data.append('password', this.state.password);
+            data.append('email', this.state.email);
+            data.append('phoneNumber', this.state.phoneNumber);
+            data.append('nickName', this.state.nickName);
+            data.append('physicalLocation', this.state.physicalLocation);
+
+            fetch(`http://localhost:5000/api/user`, {
+                method: "POST",
+                body: data
             })
                 .then(res => res.json())
                 .then(
@@ -109,7 +123,7 @@ class UserForm extends Component {
 class UserProfile extends Component {
     constructor(props) {
         super(props);
-        this.state = { userId: "", password: "", email: "", phoneNumber: "", nickName: "", alertLocation: "", physicalLocation: "", showComments: false, comments: [] };
+        this.state = { userId: "", password: "", email: "", phoneNumber: "", nickName: "", physicalLocation: "", showComments: false, comments: [] };
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleOnUpdate = this.handleOnUpdate.bind(this);
         this.handleOnDelete = this.handleOnDelete.bind(this);
@@ -120,11 +134,14 @@ class UserProfile extends Component {
     }
 
     componentDidMount() {
-        fetch(`http://localhost:5000/api/user?userId=${encodeURIComponent(this.props.userId)}&password=${encodeURIComponent(this.props.password)}`)
+        fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.props.userId)}`)
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.setState({ userId: result.userId, password: result.password, phoneNumber: result.phoneNumber, email: result.email, nickName: result.nickName, alertLocation: result.alertLocation, physicalLocation: result.physicalLocation })
+                    this.setState({
+                        userId: result.userId, password: result.password, phoneNumber: result.phoneNumber, email: result.email, nickName: result.nickName, physicalLocation: result.physicalLocation, comments: result.comments.map((commentId) => { return { commentId: commentId, content: "", focus: false }; })
+                    });
+                    this.updateComments();
                 },
                 (error) => {
 
@@ -132,15 +149,18 @@ class UserProfile extends Component {
     }
 
     updateComments() {
-        fetch(`http://localhost:5000/api/location/messages?userId=${encodeURIComponent(this.state.userId)}`)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({ comments: result.map((document) => { return { messageId: document.messageId, comment: document.content, focus: false }; }) });
-                },
-                (error) => {
-                    alert("failed");
-                });
+        for (let idx in this.state.comments.length)
+            fetch(`http://localhost:5000/api/comment/${encodeURIComponent(this.state.comments[idx].commentId)}`)
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        const newComments = this.state.comments.slice();
+                        newComments[idx].content = result.content;
+                        this.setState({ comments: newComments });
+                    },
+                    (error) => {
+                        alert("failed");
+                    });
     }
 
     handleOnChange(e) {
@@ -150,9 +170,17 @@ class UserProfile extends Component {
 
     handleOnUpdate(e) {
         e.preventDefault();
+        const data = new FormData();
+        data.append('userId', this.state.userId);
+        data.append('password', this.state.password);
+        data.append('email', this.state.email);
+        data.append('phoneNumber', this.state.phoneNumber);
+        data.append('nickName', this.state.nickName);
+        data.append('physicalLocation', this.state.physicalLocation);
 
-        fetch(`http://localhost:5000/api/user?userId=${encodeURIComponent(this.state.userId)}&password=${encodeURIComponent(this.state.password)}&email=${encodeURIComponent(this.state.email)}&phoneNumber=${encodeURIComponent(this.state.phoneNumber)}&nickName=${encodeURIComponent(this.state.nickName)}&alertLocation=${encodeURIComponent(this.state.alertLocation)}&physicalLocation=${encodeURIComponent(this.state.physicalLocation)}`, {
-            method: "PUT"
+        fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.state.userId)}`, {
+            method: "PUT",
+            body: data
         })
             .then(res => res.json())
             .then(
@@ -165,14 +193,15 @@ class UserProfile extends Component {
 
     handleOnDelete(e) {
         e.preventDefault();
-        fetch(`http://localhost:5000/api/user?userId=${encodeURIComponent(this.state.userId)}&password=${encodeURIComponent(this.state.password)}`, {
+        fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.state.userId)}`, {
             method: "DELETE"
         })
             .then(res => res.json())
             .then(
                 (result) => {
                     this.props.updateWhenLogout();
-                },
+                })
+            .catch(
                 (error) => {
                     alert("failed");
                 });
@@ -201,8 +230,13 @@ class UserProfile extends Component {
         const newComments = this.state.comments.slice();
         newComments[e.target.attributes['index'].value].focus = false;
         this.setState({ comments: newComments });
-        fetch(`http://localhost:5000/api/location/messages?messageId=${encodeURIComponent(this.state.comments[e.target.attributes['index'].value].messageId)}&content=${encodeURIComponent(e.target.value)}`, {
-            method: "PUT"
+        const data = new FormData();
+        data.append('userId', this.state.userId);
+        data.append('content', e.target.value);
+
+        fetch(`http://localhost:5000/api/comment/${encodeURIComponent(this.state.comments[e.target.attributes['index'].value].commentId)}`, {
+            method: "PUT",
+            body: data
         })
             .then(res => res.json())
             .then(
@@ -218,9 +252,9 @@ class UserProfile extends Component {
     render() {
         let comments = this.state.comments.map((object, idx) => {
             if (!object.focus)
-                return (<li onDoubleClick={this.handleOnOpenComment} key={idx} index={idx}>{object.comment}</li>);
+                return (<li onDoubleClick={this.handleOnOpenComment} key={idx} index={idx}>{object.content}</li>);
             else
-                return (<input style={{ width: "100%" }} onBlur={this.handleOnEditComment} key={idx} index={idx} defaultValue={object.comment}></input>);
+                return (<input style={{ width: "100%" }} onBlur={this.handleOnEditComment} key={idx} index={idx} defaultValue={object.content}></input>);
         });
 
         return (
@@ -249,10 +283,6 @@ class UserProfile extends Component {
                     <label htmlFor="physicalLocation">physicalLocation:</label>
                     <input type="text" id="physicalLocation" name="physicalLocation" value={this.state.physicalLocation} onChange={this.handleOnChange} />
                 </div>
-                <div className="userInputDiv">
-                    <label htmlFor="alertLocation">AlertLocation:</label>
-                    <input type="text" id="alertLocation" name="alertLocation" value={this.state.alertLocation} onChange={this.handleOnChange} />
-                </div>
                 <div>
                     <nav hidden={!this.state.showComments}>
                         <ul>
@@ -264,7 +294,7 @@ class UserProfile extends Component {
                     <button onClick={this.handleOnUpdate}>Update </button>
                     <button onClick={this.handleOnDelete}>Delete </button>
                     <button onClick={this.props.updateWhenLogout}>Logout </button>
-                    <button onClick={this.handleOnComments}>ShowComments </button>
+                    {/* <button onClick={this.handleOnComments}>ShowComments </button> */}
                 </div>
             </div>
         );
@@ -290,10 +320,10 @@ class User extends Component {
     }
 
     render() {
-        if (this.props.userId == null) {
+        if (this.props.userId === null) {
             return (
                 <div className='sidebarItem'>
-                    <Popup trigger={<img style={{ width: '8vw' }} src={user} />} modal nested>
+                    <Popup trigger={<img style={{ width: '8vw' }} alt='user' src={user} />} modal nested>
                         {
                             close => (
                                 <div className="modal">
@@ -313,7 +343,7 @@ class User extends Component {
         else {
             return (
                 <div className='sidebarItem'>
-                    <Popup trigger={<img style={{ width: '8vw' }} src={user} />} modal nested>
+                    <Popup trigger={<img style={{ width: '8vw' }} alt='user' src={user} />} modal nested>
                         {
                             close => (
                                 <div className="modal">

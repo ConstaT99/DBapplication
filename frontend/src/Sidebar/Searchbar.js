@@ -25,7 +25,7 @@ class Searchbar extends Component {
     render() {
         return (
             <div className='sidebarItem'>
-                <Popup trigger={<img style={{ width: '8vw' }} src={searchbar} />} modal nested>
+                <Popup trigger={<img style={{ width: '8vw' }} alt="searchbar" src={searchbar} />} modal nested>
                     {
                         close => (
                             <div className="modal">
