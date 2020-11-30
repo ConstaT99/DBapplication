@@ -1,24 +1,26 @@
 import csv
 import json
 import pandas as pd
-import sys, getopt, pprint
+import sys
+import getopt
+import pprint
 from pymongo import MongoClient
-#CSV to JSON Conversion
-fireData = open('data.csv', 'r')
+# CSV to JSON Conversion
+fireData = open('data.csv', 'r', encoding='utf-8')
 reader = csv.DictReader(fireData)
 
-client = MongoClient("localhost",27017)
+client = MongoClient("localhost", 27017)
 db = client.projectnull
 user = db.calFire
 
 db.calFire.drop()
 
-header= list(pd.read_csv('data.csv').columns)[1:]
+header = list(pd.read_csv('data.csv').columns)[1:]
 
 # print(header)
 for each in reader:
-    row={}
+    row = {}
     for field in header:
-        row[field]=each[field]
+        row[field] = each[field]
 
     db.calFire.insert_one(row)

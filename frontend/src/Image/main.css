@@ -1,0 +1,22 @@
+.upload {
+    background-color: aliceblue;
+    z-index: 10;
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    height: 150px;
+    width: 150px;
+    margin-top: -75px;
+    margin-left: -75px;
+    border-radius: 50%;
+    background-color: #111111;
+    opacity: 0.5;
+    text-align: center;
+    font-size: xx-large;
+    color: white;
+}
+
+.upload:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}

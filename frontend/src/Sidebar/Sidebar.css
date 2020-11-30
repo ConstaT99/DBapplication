@@ -1,0 +1,25 @@
+.sidebar {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    z-index: 10;
+    position: absolute;
+    left:0;
+    top: 0;
+}
+
+.sidebarItem {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    width: fit-content;
+    background-color: #111111;
+    opacity: 0.5;
+    text-align: right;
+}
+
+.sidebarItem:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}

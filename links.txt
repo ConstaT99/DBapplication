@@ -1,0 +1,1 @@
+https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&startDate=2016-01-01&endDate=2016-01-02
