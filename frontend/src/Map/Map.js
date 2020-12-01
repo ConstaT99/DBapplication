@@ -36,7 +36,7 @@ class GoogleMap extends Component {
         let markers = this.props.markers.map((document, idx) => {
             return (
                 <Marker
-                    name={document.incidentCounty}
+                    name={document.incidentName}
                     incidentId={document.incidentId}
                     position={{ lat: document.incidentLatitude, lng: document.incidentLongitude }}
                     index={idx}
