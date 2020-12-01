@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   updateMarkers(startDate = "20200806", endDate = "20201106") {
-    fetch(`http://localhost:5000/api/location?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`)
+    fetch(`https://api.projectnull76.web.illinois.edu/api/location?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`)
       .then(res => res.json())
       .then(
         (result) => {

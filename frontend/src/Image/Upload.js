@@ -30,7 +30,7 @@ class Upload extends Component {
         data.append('userId', this.props.userId);
         data.append('incidentId', this.props.incidentId);
 
-        fetch(`http://localhost:5000/api/image`, {
+        fetch(`https://api.projectnull76.web.illinois.edu/api/image`, {
             method: "POST",
             body: data
         })
@@ -40,7 +40,7 @@ class Upload extends Component {
                 data.append('userId', this.props.userId);
                 data.append('imageId', result);
                 data.append('content', this.state.content);
-                return fetch(`http://localhost:5000/api/comment`, {
+                return fetch(`https://api.projectnull76.web.illinois.edu/api/comment`, {
                     method: "POST",
                     body: data
                 });

@@ -27,7 +27,7 @@ class UserForm extends Component {
         if (this.props.option === signInOption) {
             data.append('userId', this.state.userId);
             data.append('password', this.state.password);
-            fetch(`http://localhost:5000/api/user/login`, {
+            fetch(`https://api.projectnull76.web.illinois.edu/api/user/login`, {
                 method: "POST",
                 body: data
             })
@@ -49,7 +49,7 @@ class UserForm extends Component {
             data.append('nickName', this.state.nickName);
             data.append('physicalLocation', this.state.physicalLocation);
 
-            fetch(`http://localhost:5000/api/user`, {
+            fetch(`https://api.projectnull76.web.illinois.edu/api/user`, {
                 method: "POST",
                 body: data
             })
@@ -134,7 +134,7 @@ class UserProfile extends Component {
     }
 
     componentDidMount() {
-        fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.props.userId)}`)
+        fetch(`https://api.projectnull76.web.illinois.edu/api/user/${encodeURIComponent(this.props.userId)}`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -150,7 +150,7 @@ class UserProfile extends Component {
 
     updateComments() {
         for (let idx in this.state.comments.length)
-            fetch(`http://localhost:5000/api/comment/${encodeURIComponent(this.state.comments[idx].commentId)}`)
+            fetch(`https://api.projectnull76.web.illinois.edu/api/comment/${encodeURIComponent(this.state.comments[idx].commentId)}`)
                 .then(res => res.json())
                 .then(
                     (result) => {
@@ -178,7 +178,7 @@ class UserProfile extends Component {
         data.append('nickName', this.state.nickName);
         data.append('physicalLocation', this.state.physicalLocation);
 
-        fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.state.userId)}`, {
+        fetch(`https://api.projectnull76.web.illinois.edu/api/user/${encodeURIComponent(this.state.userId)}`, {
             method: "PUT",
             body: data
         })
@@ -193,7 +193,7 @@ class UserProfile extends Component {
 
     handleOnDelete(e) {
         e.preventDefault();
-        fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.state.userId)}`, {
+        fetch(`https://api.projectnull76.web.illinois.edu/api/user/${encodeURIComponent(this.state.userId)}`, {
             method: "DELETE"
         })
             .then(res => res.json())
@@ -234,7 +234,7 @@ class UserProfile extends Component {
         data.append('userId', this.state.userId);
         data.append('content', e.target.value);
 
-        fetch(`http://localhost:5000/api/comment/${encodeURIComponent(this.state.comments[e.target.attributes['index'].value].commentId)}`, {
+        fetch(`https://api.projectnull76.web.illinois.edu/api/comment/${encodeURIComponent(this.state.comments[e.target.attributes['index'].value].commentId)}`, {
             method: "PUT",
             body: data
         })

@@ -6,6 +6,7 @@ from bson.json_util import dumps
 import pymysql.cursors
 from flask import request
 
+
 connection = pymysql.connect(host='localhost',
                              user='root',
                              password='teamnull',

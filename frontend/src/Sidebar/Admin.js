@@ -14,7 +14,7 @@ class Admin extends Component {
 
     showUsersInFireByStatistics(e) {
         e.preventDefault();
-        fetch(`http://localhost:5000/api/admin/userInFire`)
+        fetch(`https://api.projectnull76.web.illinois.edu/api/admin/userInFire`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -31,7 +31,7 @@ class Admin extends Component {
 
     showUsersInFireByAlert(e) {
         e.preventDefault();
-        fetch(`http://localhost:5000/api/userInAlert`)
+        fetch(`https://api.projectnull76.web.illinois.edu/api/userInAlert`)
             .then(res => res.json())
             .then(
                 (result) => {

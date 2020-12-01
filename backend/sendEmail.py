@@ -20,12 +20,12 @@ def sendEmail(targetmail, content, imageid):
         server.login(gmail_user, gmail_password)
         server.sendmail(gmail_user,targetmail,msg.as_string())
         server.close()
-        print('Email sent!')
-        print('---------------------------------------------')
-        print(msg)
-        print('---------------------------------------------')
+        return True
+        # print('---------------------------------------------')
+        # print(msg)
+        # print('---------------------------------------------')
     except smtplib.SMTPException as e:
-        print('Error info: '+ str(e))
+        return 'Error info: '+ str(e)
 
 # test function
 # sendEmail("binyaoj2@illinois.edu", "你好: 你在拉屎嘛？", "121314")

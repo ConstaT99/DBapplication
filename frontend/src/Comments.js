@@ -34,7 +34,7 @@ class Comments extends Component {
             limit = this.state.imageLimit;
 
         if (this.props.incidentId !== null)
-            fetch(`http://localhost:5000/api/image/popular/${encodeURIComponent(this.props.incidentId)}?limit=${encodeURIComponent(limit)}`, {
+            fetch(`https://api.projectnull76.web.illinois.edu//api/image/popular/${encodeURIComponent(this.props.incidentId)}?limit=${encodeURIComponent(limit)}`, {
                 method: "GET"
             })
                 .then(res => res.json())
@@ -42,7 +42,7 @@ class Comments extends Component {
                     (result) => {
                         this.setState({
                             messages: result.map((document) => {
-                                return { image: { imageId: document.imageId, imageUrl: `http://localhost:5000/api/image/${encodeURIComponent(document.imageId)}`, liked: false, count: document.like }, comments: { commentIds: document.comments, contents: new Array(document.comments.length).fill(""), focuses: new Array(document.comments.length).fill(false), limit: Math.min(document.comments.length, defaultCommentsLimit) } };
+                                return { image: { imageId: document.imageId, imageUrl: `https://api.projectnull76.web.illinois.edu//api/image/${encodeURIComponent(document.imageId)}`, liked: false, count: document.like }, comments: { commentIds: document.comments, contents: new Array(document.comments.length).fill(""), focuses: new Array(document.comments.length).fill(false), limit: Math.min(document.comments.length, defaultCommentsLimit) } };
                             })
                         });
 
@@ -56,7 +56,7 @@ class Comments extends Component {
                         alert("failed");
                     });
         // else
-        //     fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.props.userId)}`, {
+        //     fetch(`https://api.projectnull76.web.illinois.edu//api/user/${encodeURIComponent(this.props.userId)}`, {
         //         method: "GET"
         //     })
         //         .then(res => res.json())
@@ -64,7 +64,7 @@ class Comments extends Component {
         //             (result) => {
         //                 this.setState({
         //                     messages: result.uploads.slice(0, this.state.imageLimit).map((document) => {
-        //                         return { image: { imageId: document.imageId, imageUrl: `http://localhost:5000/api/image/${encodeURIComponent(document.imageId)}` }, comments: { commentIds: document.comments, contents: new Array(document.comments.length).fill(""), focuses: new Array(document.comments.length).fill(false), limit: Math.min(document.comments.length, defaultCommentsLimit) } };
+        //                         return { image: { imageId: document.imageId, imageUrl: `https://api.projectnull76.web.illinois.edu//api/image/${encodeURIComponent(document.imageId)}` }, comments: { commentIds: document.comments, contents: new Array(document.comments.length).fill(""), focuses: new Array(document.comments.length).fill(false), limit: Math.min(document.comments.length, defaultCommentsLimit) } };
         //                     })
         //                 });
 
@@ -80,7 +80,7 @@ class Comments extends Component {
 
     fetchComments(imageIdx) {
         this.state.messages[imageIdx].comments.commentIds.slice(0, this.state.messages[imageIdx].comments.limit).forEach((commentId, comment_idx) => {
-            fetch(`http://localhost:5000/api/comment/${encodeURIComponent(commentId)}`, {
+            fetch(`https://api.projectnull76.web.illinois.edu//api/comment/${encodeURIComponent(commentId)}`, {
                 method: "GET"
             })
                 .then(res => res.json())
@@ -93,7 +93,7 @@ class Comments extends Component {
     }
 
     fetchLikes(imageIdx) {
-        fetch(`http://localhost:5000/api/user/${encodeURIComponent(this.props.userId)}`)
+        fetch(`https://api.projectnull76.web.illinois.edu//api/user/${encodeURIComponent(this.props.userId)}`)
             .then(res => res.json())
             .then(result => {
                 const newMessages = this.state.messages.slice();
@@ -122,7 +122,7 @@ class Comments extends Component {
         data.append('userId', this.props.userId);
         data.append('content', e.target.value.substring(e.target.value.indexOf(": ") + 2));
 
-        fetch(`http://localhost:5000/api/comment/${encodeURIComponent(this.state.messages[imageIdx].comments.commentIds[commentIdx])}`, {
+        fetch(`https://api.projectnull76.web.illinois.edu//api/comment/${encodeURIComponent(this.state.messages[imageIdx].comments.commentIds[commentIdx])}`, {
             method: "PUT",
             body: data
         })
@@ -146,7 +146,7 @@ class Comments extends Component {
         data.append('imageId', imageId);
         data.append('content', this.contentRef[imageIdx].value);
         this.contentRef[imageIdx].value = "";
-        fetch(`http://localhost:5000/api/comment`, {
+        fetch(`https://api.projectnull76.web.illinois.edu//api/comment`, {
             method: "POST",
             body: data
         })
@@ -162,7 +162,7 @@ class Comments extends Component {
         e.preventDefault();
         let imageIdx = e.target.getAttribute('imageidx');
         let imageId = e.target.getAttribute('imageid');
-        fetch(`http://localhost:5000/api/image/${imageId}/like/${encodeURIComponent(this.props.userId)}`, {
+        fetch(`https://api.projectnull76.web.illinois.edu//api/image/${imageId}/like/${encodeURIComponent(this.props.userId)}`, {
             method: "PUT"
         })
             .then(res => res.json())

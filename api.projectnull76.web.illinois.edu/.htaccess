@@ -1,0 +1,7 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/projectnull76/api.projectnull76.web.illinois.edu"
+PassengerBaseURI "/"
+PassengerPython "/home/projectnull76/virtualenv/api.projectnull76.web.illinois.edu/3.8/bin/python"
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+RewriteEngine on  
+RewriteRule ^http://%{HTTP_HOST}%{REQUEST_URI} [END,NE]
