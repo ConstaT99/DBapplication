@@ -156,6 +156,18 @@ def userInFire():
 
     return flask.jsonify(list(user.find({"physicalLocation": {"$in": list(fireCounties)}}, {"_id": 0})))
 
+@ app.route('/api/admin/popularIncidents', methods=['GET'])
+def popularIncidents():
+    connection = dbConnect.mysqlConnect()
+    cursor = connection.cursor()
+    sql = "select calFire.incidentName, count(*) as count from calFire join comments on calFire.incidentId = comments.incidentId group by calFire.incidentId order by calFire.incidentId desc limit 10"
+    cursor.execute(sql)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    document = list(cursor.fetchall())
+    return flask.jsonify(document)
 
 @app.route('/api/image', methods=['POST'])
 def createImage():
@@ -193,15 +205,15 @@ def readImage(imageId):
 @app.route('/api/image/popular/<incidentId>', methods=['GET'])
 def popularImage(incidentId):
     limit = int(request.args.get('limit'))
-    documents = images.find({"incidentId": incidentId}, {"_id": 0, "imageId": "$_id", "incidentId": 1, "userId": 1, "comments": 1, "like": 1}).sort(
+    documents = images.find({"incidentId": incidentId}, {"_id": 1, "imageId": 1, "incidentId": 1, "userId": 1, "comments": 1, "like": 1}).sort(
         "like", pymongo.DESCENDING).limit(limit)
 
     if documents is None:
         return '''Invalid request''', 400
     result = list(documents)
     for document in result:
-        document["imageId"] = str(document["imageId"].binary.hex())
-
+        document["imageId"] = str(document["_id"].binary.hex())
+        del document["_id"]
     return flask.jsonify(result)
 
 
@@ -209,35 +221,35 @@ def popularImage(incidentId):
 def createComment():
     connection = dbConnect.mysqlConnect()
     cursor = connection.cursor()
-    sql = "INSERT INTO comments (userId, content, imageId) VALUES (%s, %s, %s)"
+    sql = "INSERT INTO comments (userId, content, imageId, incidentId) VALUES (%s, %s, %s, %s)"
     userId = request.form.get('userId')
     imageId = request.form.get('imageId')
     content = request.form.get('content')
-    val = (userId, content, imageId)
     doc = user.find_one({"userId": userId})
     if doc is None:
         connection.close()
         return '''Invalid request''', 400
-    doc = images.find_one({"_id": ObjectId(imageId)})
-    if doc is None:
+    doc2 = images.find_one({"_id": ObjectId(imageId)})
+    incidentId = doc2["incidentId"]
+    val = (userId, content, imageId, incidentId)
+    if doc2 is None:
         connection.close()
-        return '''Ivalid request ''', 400
+        return '''Invalid request ''', 400
 
     cursor.execute(sql, val)
     commentId = cursor.lastrowid
-
     user.update_one({"userId": userId}, {"$push": {
         "comments": commentId}})
 
     images.update_one({"_id": ObjectId(imageId)}, {"$push": {
         "comments": commentId}})
-
+    
     #send Email
     email = doc['email']
-    result = sendEmail.sendEmail(email,content,imageId)
+    #result = sendEmail.sendEmail(email,content,imageId)
 
-    if result != True:
-        return result, 400
+    #if result != True:
+    #    return result, 400
 
     connection.commit()
     cursor.close()
@@ -257,7 +269,9 @@ def readComment(commentId):
     connection.commit()
     cursor.close()
     connection.close()
-    return jsonify(cursor.fetchone())
+    result = cursor.fetchone()
+    print(result)
+    return jsonify(result)
 
 
 # sample link http://localhost:5000/api/message/mysql/update?messageId=15&content=UpdatedHelloWorld

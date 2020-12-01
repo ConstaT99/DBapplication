@@ -24,6 +24,10 @@ class Upload extends Component {
             alert("Please click on one marker to choose a certain incident!");
             return;
         }
+        if (this.props.userId === null) {
+            alert("Please log in!");
+            return;
+        }
 
         const data = new FormData();
         data.append('fireImage', this.state.file);
