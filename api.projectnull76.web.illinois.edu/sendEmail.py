@@ -3,7 +3,6 @@ import smtplib
 from email.mime.text import MIMEText
 import ssl
 
-
 def sendEmail(targetmail, content, imageid):
     context = ssl.create_default_context()
     gmail_user = 'noreplyprojectnull@gmail.com'
@@ -17,9 +16,9 @@ def sendEmail(targetmail, content, imageid):
     msg['To'] = targetmail
 
     try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP('smtp.gmail.com',587)
         server.ehlo()
-        server.starttls(context=context)
+        server.starttls(context = context)
         server.ehlo()
         server.login(gmail_user, gmail_password)
         server.sendmail(gmail_user, targetmail, msg.as_string())
@@ -29,6 +28,3 @@ def sendEmail(targetmail, content, imageid):
         # print('---------------------------------------------')
     except smtplib.SMTPException as e:
         return 'Error info: ' + str(e)
-
-# test function
-# sendEmail("rtao6@illinois.edu", "Hello", "121314")
