@@ -243,17 +243,17 @@ def createComment():
 
     images.update_one({"_id": ObjectId(imageId)}, {"$push": {
         "comments": commentId}})
-    
     #send Email
-    email = doc['email']
-    #result = sendEmail.sendEmail(email,content,imageId)
-
-    #if result != True:
-    #    return result, 400
-
+    targetuser = doc2["userId"] # get post userid
+    doc3 = user.find_one({"userId": targetuser})
+    if doc3 is None:
+        connection.close()
+        return '''Invalid request''', 400
+    targetemail = doc3['email']
     connection.commit()
     cursor.close()
     connection.close()
+    sendEmail.sendEmail(targetemail,content,imageId)
     return flask.jsonify('Success')
 
 
