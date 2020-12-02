@@ -14,7 +14,7 @@ class Admin extends Component {
 
     showUsersInFire(e) {
         e.preventDefault();
-        fetch(`https://api.projectnull76.web.illinois.edu/api/admin/userInFire`)
+        fetch(`https://api.projectnull76.web.illinois.edu/api/admin/userInFire/${encodeURIComponent(this.props.userId)}`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -25,13 +25,13 @@ class Admin extends Component {
                     });
                 },
                 (error) => {
-                    alert("failed");
+                    alert("failed (perhaps you are not the admin user)");
                 });
     };
 
     showPopularIncidents(e) {
         e.preventDefault();
-        fetch(`https://api.projectnull76.web.illinois.edu/api/admin/popularIncidents`)
+        fetch(`https://api.projectnull76.web.illinois.edu/api/admin/popularIncidents/${encodeURIComponent(this.props.userId)}`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -42,7 +42,7 @@ class Admin extends Component {
                     });
                 },
                 (error) => {
-                    alert("failed");
+                    alert("failed (perhaps you are not the admin user)");
                 });
     }
 

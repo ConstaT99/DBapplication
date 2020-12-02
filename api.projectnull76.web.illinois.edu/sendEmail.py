@@ -9,7 +9,7 @@ def sendEmail(targetmail, content, imageid):
     gmail_password = 'null1234'
     subject = 'Your image %s have new comment' % (imageid)
 
-    msg = MIMEText(content,'plain', 'utf-8')
+    msg = MIMEText(content, 'plain', 'utf-8')
 
     msg['Subject'] = subject
     msg['From'] = gmail_user
@@ -21,13 +21,10 @@ def sendEmail(targetmail, content, imageid):
         server.starttls(context = context)
         server.ehlo()
         server.login(gmail_user, gmail_password)
-        server.sendmail(gmail_user,targetmail,msg.as_string())
+        server.sendmail(gmail_user, targetmail, msg.as_string())
         server.close()
         # print('---------------------------------------------')
         # print(msg)
         # print('---------------------------------------------')
     except smtplib.SMTPException as e:
-        return 'Error info: '+ str(e)
-
-# test function
-# sendEmail("rtao6@illinois.edu", "Hello", "121314")
+        return 'Error info: ' + str(e)

@@ -5,3 +5,4 @@ pymongo == 3.11.0
 email-to == 0.1.0
 dnspython
 pymongo[tls,srv]
+pandas

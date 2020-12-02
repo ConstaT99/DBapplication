@@ -15,7 +15,7 @@ class Sidebar extends Component {
             <div className='sidebar'>
                 <User userId={this.props.userId} password={this.props.password} updateUserInfo={this.props.updateUserInfo} />
                 <Searchbar updateMarkers={this.props.updateMarkers} />
-                <Admin />
+                <Admin userId={this.props.userId} />
                 <AboutUs />
             </div>
         );
