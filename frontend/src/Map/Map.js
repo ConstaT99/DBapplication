@@ -6,7 +6,7 @@ import Comments from '../Comments.js'
 class GoogleMap extends Component {
     constructor(props) {
         super(props);
-        this.state = { showingInfoWindow: false, activeMarkers: null, incidentId: null, selectedPlace: null };
+        this.state = { showingInfoWindow: false, startDate: null, endDate: null, incidentAcresBurned: null, detailedURL: null, activeMarkers: null, incidentId: null, selectedPlace: null };
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
         this.onInfoWindowOpen = this.onInfoWindowOpen.bind(this);
@@ -22,14 +22,26 @@ class GoogleMap extends Component {
     }
 
     onInfoWindowOpen(props, e) {
-        const newDiv = (<div><h1>{this.state.selectedPlace}</h1><Comments incidentId={this.state.incidentId} userId={this.props.userId} /></div>);
+        const newDiv = (
+            <div>
+                <h1>{this.state.selectedPlace}</h1>
+                <h4>Duration: {this.state.startDate} - {this.state.endDate}</h4>
+                <h4>Burned Acres: {this.state.incidentAcresBurned}</h4>
+                <h4>Detailed URL: <a href={this.state.detailedURL}>URL</a></h4>
+                <Comments incidentId={this.state.incidentId} userId={this.props.userId} />
+            </div>
+        );
         ReactDOM.render(React.Children.only(newDiv), document.getElementById("iwc"));
     }
 
     onMarkerClick(props, marker, e) {
         this.props.updateIncidentId(props.incidentId);
         this.props.updateAnimation(props.index);
-        this.setState({ selectedPlace: props.name, incidentId: props.incidentId, showingInfoWindow: true, activeMarker: marker });
+        this.setState({
+            selectedPlace: props.name, startDate: props.startDate, endDate: props.endDate,
+            incidentAcresBurned: props.incidentAcresBurned, detailedURL: props.detailedURL,
+            incidentId: props.incidentId, showingInfoWindow: true, activeMarker: marker
+        });
     }
 
     render() {
@@ -37,6 +49,10 @@ class GoogleMap extends Component {
             return (
                 <Marker
                     name={document.incidentName}
+                    startDate={document.incidentDateonlyCreated}
+                    endDate={document.incidentDateonlyExtinguished}
+                    incidentAcresBurned={document.incidentAcresBurned}
+                    detailedURL={document.incidentUrl}
                     incidentId={document.incidentId}
                     position={{ lat: document.incidentLatitude, lng: document.incidentLongitude }}
                     index={idx}

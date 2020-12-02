@@ -30,7 +30,6 @@ images = db.images
 #                            cursorclass=pymysql.cursors.DictCursor)
 
 
-
 @app.route('/', methods=['GET'])
 def home():
     return '''<h1>Success!</h1>'''
@@ -138,8 +137,13 @@ def getHistData():
     return jsonify(cursor.fetchall())
 
 
-@ app.route('/api/admin/userInFire', methods=['GET'])
-def userInFire():
+@ app.route('/api/admin/userInFire/<userId>', methods=['GET'])
+def userInFire(userId):
+    doc = user.find_one({"userId": userId})
+    if doc is None or doc["admin"] is None:
+        # raise error
+        return '''Invalid request''', 400
+
     connection = dbConnect.mysqlConnect()
     cursor = connection.cursor()
     sql = "select incidentCounty from calFire where incidentIsFinal = 0 "
@@ -156,11 +160,17 @@ def userInFire():
 
     return flask.jsonify(list(user.find({"physicalLocation": {"$in": list(fireCounties)}}, {"_id": 0})))
 
-@ app.route('/api/admin/popularIncidents', methods=['GET'])
-def popularIncidents():
+
+@ app.route('/api/admin/popularIncidents/<userId>', methods=['GET'])
+def popularIncidents(userId):
+    doc = user.find_one({"userId": userId})
+    if doc is None or doc["admin"] is None:
+        # raise error
+        return '''Invalid request''', 400
+
     connection = dbConnect.mysqlConnect()
     cursor = connection.cursor()
-    sql = "select calFire.incidentName, count(*) as count from calFire join comments on calFire.incidentId = comments.incidentId group by calFire.incidentId order by calFire.incidentId desc limit 10"
+    sql = "select calFire.incidentName, count(*) as count from calFire join comments on calFire.incidentId = comments.incidentId group by calFire.incidentId order by count(*) desc limit 10"
     cursor.execute(sql)
     connection.commit()
     cursor.close()
@@ -168,6 +178,7 @@ def popularIncidents():
 
     document = list(cursor.fetchall())
     return flask.jsonify(document)
+
 
 @app.route('/api/image', methods=['POST'])
 def createImage():
@@ -243,17 +254,17 @@ def createComment():
 
     images.update_one({"_id": ObjectId(imageId)}, {"$push": {
         "comments": commentId}})
-    
-    #send Email
-    email = doc['email']
-    #result = sendEmail.sendEmail(email,content,imageId)
-
-    #if result != True:
-    #    return result, 400
-
+    # send Email
+    targetuser = doc2["userId"]  # get post userid
+    doc3 = user.find_one({"userId": targetuser})
+    if doc3 is None:
+        connection.close()
+        return '''Invalid request''', 400
+    targetemail = doc3['email']
     connection.commit()
     cursor.close()
     connection.close()
+    sendEmail.sendEmail(targetemail, content, imageId)
     return flask.jsonify('Success')
 
 

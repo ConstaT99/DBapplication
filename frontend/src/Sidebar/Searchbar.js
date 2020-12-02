@@ -42,7 +42,7 @@ class Searchbar extends Component {
                                         <input type="text" id="enddate" name="enddate" value={this.state.enddate} onChange={this.handleOnChange} />
                                     </div>
                                     <div className="userInputDiv">
-                                        <button onClick={this.handleOnUpload}>Upload </button>
+                                        <button onClick={this.handleOnUpload}>Search </button>
                                     </div>
                                 </div>
                             </div>
