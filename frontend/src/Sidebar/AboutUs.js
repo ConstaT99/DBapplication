@@ -28,8 +28,9 @@ class AboutUs extends Component {
                                     <p> Haining Yang</p>
                                     <h2> Project Summary </h2>
                                     <p> This project is going to visualizing the real-time wildfire data. </p>
-                                    <p> Our site will alert the user by our prediction algorithm, </p>
-                                    <p> and when user found a wildfire, they can upload the picture to related indcident or location.</p>
+                                    <p> Our site will established an unique social system based on the wildfire information </p>
+                                    <p> where user can share, comment and react to the fire incident </p>
+                                    <p> and when user found a wildfire, they can upload the picture to related incident or location.</p>
                                 </div>
                             </div>
                         )
