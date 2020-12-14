@@ -160,6 +160,20 @@ def userInFire():
     return flask.jsonify(list(user.find({"physicalLocation": {"$in": list(fireCounties)}}, {"_id": 0})))
 
 
+@ app.route('/api/admin/popularIncidents', methods=['GET'])
+def popularIncidents():
+    connection = create_connection()
+    cursor = connection.cursor()
+    sql = "select calFire.incidentName, count(*) as count from calFire join comments on calFire.incidentId = comments.incidentId group by calFire.incidentId order by calFire.incidentId desc limit 10"
+    cursor.execute(sql)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    document = list(cursor.fetchall())
+    return flask.jsonify(document)
+
+
 @app.route('/api/image', methods=['POST'])
 def createImage():
     target = os.path.join(APP_ROOT, 'images/')  # folder path
@@ -212,19 +226,20 @@ def popularImage(incidentId):
 def createComment():
     connection = create_connection()
     cursor = connection.cursor()
-    sql = "INSERT INTO comments (userId, content, imageId) VALUES (%s, %s, %s)"
+    sql = "INSERT INTO comments (userId, content, imageId, incidentId) VALUES (%s, %s, %s, %s)"
     userId = request.form.get('userId')
     imageId = request.form.get('imageId')
     content = request.form.get('content')
-    val = (userId, content, imageId)
     doc = user.find_one({"userId": userId})
     if doc is None:
         connection.close()
         return '''Invalid request''', 400
     doc = images.find_one({"_id": ObjectId(imageId)})
+    incidentId = doc["incidentId"]
+    val = (userId, content, imageId, incidentId)
     if doc is None:
         connection.close()
-        return '''Ivalid request ''', 400
+        return '''Invalid request ''', 400
 
     cursor.execute(sql, val)
     commentId = cursor.lastrowid

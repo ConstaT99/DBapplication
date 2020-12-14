@@ -18,4 +18,4 @@ app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 # cursor.execute("CREATE DATABASE projectnull")
-cursor.execute("CREATE TABLE comments (commentId int NOT NULL AUTO_INCREMENT, createDate DATETIME DEFAULT NOW(), userId VARCHAR(255), content VARCHAR(255), imageId VARCHAR(255), primary key(commentId))")
+cursor.execute("CREATE TABLE comments (commentId int NOT NULL AUTO_INCREMENT, createDate DATETIME DEFAULT NOW(), userId VARCHAR(255), incidentId VARCHAR(255), content VARCHAR(255), imageId VARCHAR(255), primary key(commentId), foreign key(incidentId) references calFire(incidentId))")

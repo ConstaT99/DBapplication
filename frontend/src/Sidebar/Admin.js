@@ -8,11 +8,11 @@ class Admin extends Component {
     constructor(props) {
         super(props);
         this.state = { results: [] }
-        this.showUsersInFireByStatistics = this.showUsersInFireByStatistics.bind(this);
-        this.showUsersInFireByAlert = this.showUsersInFireByAlert.bind(this);
+        this.showUsersInFire = this.showUsersInFire.bind(this);
+        this.showPopularIncidents = this.showPopularIncidents.bind(this);
     }
 
-    showUsersInFireByStatistics(e) {
+    showUsersInFire(e) {
         e.preventDefault();
         fetch(`http://localhost:5000/api/admin/userInFire`)
             .then(res => res.json())
@@ -29,15 +29,15 @@ class Admin extends Component {
                 });
     };
 
-    showUsersInFireByAlert(e) {
+    showPopularIncidents(e) {
         e.preventDefault();
-        fetch(`http://localhost:5000/api/userInAlert`)
+        fetch(`http://localhost:5000/api/admin/popularIncidents`)
             .then(res => res.json())
             .then(
                 (result) => {
                     this.setState({
                         results: result.map((document) => {
-                            return document.userId;
+                            return document.incidentName + ": " + document.count + " comments";
                         })
                     });
                 },
@@ -67,8 +67,8 @@ class Admin extends Component {
                                         </ul>
                                     </nav>
                                     <div className="userInputDiv">
-                                        <button onClick={this.showUsersInFireByStatistics}>showUsersInFireByStatistics </button>
-                                        {/* <button onClick={this.showUsersInFireByAlert}>showUsersInFireByAlert </button> */}
+                                        <button onClick={this.showUsersInFire}>showUsersInFire </button>
+                                        <button onClick={this.showPopularIncidents}>showPopularIncidents </button>
                                     </div>
                                 </div>
                             </div>
