@@ -1,4 +1,4 @@
-### Project Null Description, Team #76
+### Project Null Description, Team #76 (this project is no longer maintance)
 
 ### Description:
 Our project is a visual summary of wildfire incidents in California. Users are permitted to upload the wildfire pictures and their contact information. Prediction can be made according to the weather information and users will receive an alert email if the place they registered is predicted to have wildfires in near future.
